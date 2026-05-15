@@ -1,0 +1,545 @@
+﻿@{
+    Layout = "~/Views/Shared/_RegLayoutPage.cshtml";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg,#0d47a1,#1976d2,#42a5f5);
+        min-height: 100vh;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 40px;
+        color: white;
+    }
+
+        .header h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .top-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .add-btn {
+        background: #43a047;
+        padding: 8px 18px;
+        border-radius: 20px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        font-size: 14px;
+    }
+
+        .add-btn:hover {
+            background: #2e7d32;
+        }
+
+    .logout-btn {
+        background: rgba(255,255,255,0.2);
+        padding: 8px 18px;
+        border-radius: 20px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .logout-btn:hover {
+            background: white;
+            color: #0d47a1;
+        }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 25px 40px 0;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 18px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+        .stat-card h2 {
+            margin: 0;
+            color: #1565c0;
+        }
+
+        .stat-card p {
+            margin: 5px 0 0;
+            color: gray;
+        }
+
+    /* ANALYTICS */
+    .analytics-header {
+        padding: 25px 40px 0;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        padding: 15px 40px 20px;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        padding: 20px;
+    }
+
+        .chart-card h6 {
+            color: #1565c0;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            font-size: 15px;
+        }
+
+        .chart-card p {
+            color: gray;
+            font-size: 12px;
+            margin: 0 0 15px 0;
+        }
+
+    .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 12px;
+        font-size: 12px;
+    }
+
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 4px;
+    }
+
+    /* TABLE */
+    .container-box {
+        padding: 0 40px 40px;
+    }
+
+    .main-card {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #e3f2fd;
+        color: #1565c0;
+        padding: 14px;
+        text-align: left;
+    }
+
+    td {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background: #f5faff;
+    }
+
+    .status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100px;
+        height: 30px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .available {
+        background: #43a047;
+    }
+
+    .borrowed {
+        background: #e53935;
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        color: white;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        margin-right: 4px;
+    }
+
+    .edit {
+        background: #fb8c00;
+    }
+
+    .delete {
+        background: #d32f2f;
+    }
+
+    .return-btn {
+        background: #43a047;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+    .modal-box {
+        background: white;
+        border-radius: 18px;
+        padding: 30px;
+        width: 400px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+        .modal-box h5 {
+            color: #1565c0;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .modal-box input, .modal-box select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-save {
+        background: #1565c0;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        flex: 1;
+    }
+
+    .btn-cancel {
+        background: #e0e0e0;
+        color: black;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        flex: 1;
+    }
+</style>
+
+<div ng-controller="AdminDashboardController">
+
+    <div class="header">
+        <h3>🛠️ Admin Dashboard</h3>
+        <div class="top-actions">
+            <button class="add-btn" ng-click="openAddModal()">+ Add Book</button>
+            <a href="/Registration/Login" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h2>{{ stats.total }}</h2>
+            <p>Total Books</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ stats.borrowed }}</h2>
+            <p>Borrowed Books</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ stats.available }}</h2>
+            <p>Available Books</p>
+        </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="analytics-header">📊 Analytics Overview</div>
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h6>Book status</h6>
+            <p>Pie chart — distribution by status</p>
+            <div class="chart-legend">
+                <span><span class="legend-dot" style="background:#1565c0"></span>Available</span>
+                <span><span class="legend-dot" style="background:#e53935"></span>Borrowed</span>
+            </div>
+            <canvas id="pieChart" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+            <h6>Category share</h6>
+            <p>Donut chart — books per category</p>
+            <canvas id="donutChart" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+            <h6>Monthly borrows</h6>
+            <p>Bar chart — borrow count per month</p>
+            <div class="chart-legend">
+                <span><span class="legend-dot" style="background:#1565c0"></span>Borrows</span>
+                <span><span class="legend-dot" style="background:#43a047"></span>Returns</span>
+            </div>
+            <canvas id="barChart" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+            <h6>Borrow trends</h6>
+            <p>Line chart — weekly activity over 6 weeks</p>
+            <div class="chart-legend">
+                <span><span class="legend-dot" style="background:#1565c0"></span>Borrows</span>
+                <span><span class="legend-dot" style="background:#e53935"></span>Returns</span>
+            </div>
+            <canvas id="lineChart" height="220"></canvas>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="container-box">
+        <div class="main-card">
+            <h5>Inventory Management</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="book in books">
+                        <td>{{ book.Title }}</td>
+                        <td>{{ book.Author }}</td>
+                        <td>
+                            <span class="status" ng-class="book.Status === 'Available' ? 'available' : 'borrowed'">
+                                {{ book.Status }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="action-btn edit" ng-click="openEditModal(book)">Edit</button>
+                            <button class="action-btn delete" ng-click="deleteBook(book.BookID)">Delete</button>
+                            <button class="action-btn return-btn"
+                                    ng-if="book.Status === 'Borrowed'"
+                                    ng-click="returnBook(book.BookID)">
+                                Return
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" ng-class="{ active: showModal }">
+        <div class="modal-box">
+            <h5>{{ modalTitle }}</h5>
+            <input type="text" ng-model="formBook.Title" placeholder="Title" />
+            <input type="text" ng-model="formBook.Author" placeholder="Author" />
+            <select ng-model="formBook.Status">
+                <option value="Available">Available</option>
+                <option value="Borrowed">Borrowed</option>
+            </select>
+            <div class="modal-actions">
+                <button class="btn-save" ng-click="saveBook()">Save</button>
+                <button class="btn-cancel" ng-click="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        app.controller("AdminDashboardController", function ($scope, $timeout, OnlineLibraryMSService) {
+
+            $scope.showModal = false;
+            $scope.isEdit = false;
+            $scope.formBook = {};
+
+            var pieChart, donutChart, barChart, lineChart;
+            var categoryColors = ['#1565c0', '#43a047', '#e53935', '#fb8c00', '#8e24aa', '#00acc1', '#f4511e', '#6d4c41'];
+
+            function renderCharts(stats, categoryData, monthlyData, weeklyData) {
+                if (pieChart) pieChart.destroy();
+                if (donutChart) donutChart.destroy();
+                if (barChart) barChart.destroy();
+                if (lineChart) lineChart.destroy();
+
+                pieChart = new Chart(document.getElementById('pieChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Available', 'Borrowed'],
+                        datasets: [{ data: [stats.available, stats.borrowed], backgroundColor: ['#1565c0', '#e53935'], borderWidth: 2 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } } }
+                });
+
+                donutChart = new Chart(document.getElementById('donutChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: categoryData.map(function (c) { return c.label; }),
+                        datasets: [{ data: categoryData.map(function (c) { return c.count; }), backgroundColor: categoryColors.slice(0, categoryData.length), borderWidth: 2 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+                });
+
+                barChart = new Chart(document.getElementById('barChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: monthlyData.labels,
+                        datasets: [
+                            { label: 'Borrows', data: monthlyData.borrows, backgroundColor: '#1565c0', borderRadius: 6 },
+                            { label: 'Returns', data: monthlyData.returns, backgroundColor: '#43a047', borderRadius: 6 }
+                        ]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                });
+
+                lineChart = new Chart(document.getElementById('lineChart'), {
+                    type: 'line',
+                    data: {
+                        labels: weeklyData.labels,
+                        datasets: [
+                            { label: 'Borrows', data: weeklyData.borrows, borderColor: '#1565c0', backgroundColor: 'rgba(21,101,192,0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#1565c0', pointRadius: 5 },
+                            { label: 'Returns', data: weeklyData.returns, borderColor: '#e53935', backgroundColor: 'rgba(229,57,53,0.05)', tension: 0.4, fill: false, borderDash: [5, 5], pointBackgroundColor: '#e53935', pointRadius: 5 }
+                        ]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                });
+            }
+
+            function loadStats() {
+                OnlineLibraryMSService.getStats().then(function (res) {
+                    $scope.stats = res.data;
+                    var statsData = res.data;
+                    OnlineLibraryMSService.getCategoryStats().then(function (r2) {
+                        OnlineLibraryMSService.getMonthlyActivity().then(function (r3) {
+                            OnlineLibraryMSService.getWeeklyActivity().then(function (r4) {
+                                $timeout(function () {
+                                    renderCharts(statsData, r2.data, r3.data, r4.data);
+                                }, 100);
+                            });
+                        });
+                    });
+                });
+            }
+
+            function loadBooks() {
+                OnlineLibraryMSService.getBooks().then(function (res) {
+                    $scope.books = res.data;
+                });
+            }
+
+            $scope.openAddModal = function () {
+                $scope.isEdit = false;
+                $scope.modalTitle = "Add New Book";
+                $scope.formBook = { Status: "Available" };
+                $scope.showModal = true;
+            };
+
+            $scope.openEditModal = function (book) {
+                $scope.isEdit = true;
+                $scope.modalTitle = "Edit Book";
+                $scope.formBook = angular.copy(book);
+                $scope.showModal = true;
+            };
+
+            $scope.closeModal = function () {
+                $scope.showModal = false;
+                $scope.formBook = {};
+            };
+
+            $scope.saveBook = function () {
+                if ($scope.isEdit) {
+                    OnlineLibraryMSService.editBook($scope.formBook).then(function (res) {
+                        if (res.data.success) { alert(res.data.message); $scope.closeModal(); loadBooks(); loadStats(); }
+                        else { alert(res.data.message); }
+                    });
+                } else {
+                    OnlineLibraryMSService.addBook($scope.formBook).then(function (res) {
+                        if (res.data.success) { alert(res.data.message); $scope.closeModal(); loadBooks(); loadStats(); }
+                        else { alert(res.data.message); }
+                    });
+                }
+            };
+
+            $scope.deleteBook = function (bookID) {
+                if (confirm("Are you sure you want to delete this book?")) {
+                    OnlineLibraryMSService.deleteBook(bookID).then(function (res) {
+                        if (res.data.success) { alert(res.data.message); loadBooks(); loadStats(); }
+                        else { alert(res.data.message); }
+                    });
+                }
+            };
+
+            $scope.returnBook = function (bookID) {
+                if (confirm("Mark this book as returned?")) {
+                    OnlineLibraryMSService.returnBook({ BookID: bookID, UserID: 0 }).then(function (res) {
+                        if (res.data.success) { alert(res.data.message); loadBooks(); loadStats(); }
+                        else {
+                            OnlineLibraryMSService.editBook({ BookID: bookID, Status: 'Available' }).then(function () { loadBooks(); loadStats(); });
+                        }
+                    });
+                }
+            };
+
+            loadBooks();
+            loadStats();
+        });
+    </script>
+}

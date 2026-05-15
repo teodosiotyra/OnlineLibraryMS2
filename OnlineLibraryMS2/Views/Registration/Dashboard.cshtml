@@ -1,0 +1,277 @@
+﻿@{
+    Layout = "~/Views/Shared/_RegLayoutPage.cshtml";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg,#0d47a1,#1976d2,#42a5f5);
+        min-height: 100vh;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 40px;
+        color: white;
+    }
+
+        .header h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .logout-btn {
+        background: rgba(255,255,255,0.2);
+        padding: 8px 18px;
+        border-radius: 20px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+        .logout-btn:hover {
+            background: white;
+            color: #0d47a1;
+        }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 25px 40px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 18px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+        .stat-card h2 {
+            margin: 0;
+            color: #1565c0;
+        }
+
+        .stat-card p {
+            margin: 5px 0 0;
+            color: gray;
+        }
+
+    .container-box {
+        padding: 0 40px 40px;
+    }
+
+    .main-card {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #e3f2fd;
+        color: #1565c0;
+        padding: 14px;
+        text-align: left;
+    }
+
+    td {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background: #f5faff;
+    }
+
+    .status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100px;
+        height: 30px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .available {
+        background: #43a047;
+    }
+
+    .borrowed {
+        background: #e53935;
+    }
+
+    .btn-borrow {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        color: white;
+        background: #1565c0;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .btn-return {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        color: white;
+        background: #43a047;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+        .btn-borrow:disabled, .btn-return:disabled {
+            background: #bdbdbd;
+            cursor: not-allowed;
+        }
+</style>
+
+<div ng-controller="DashboardController">
+
+    <div class="header">
+        <h3>📚 Library Dashboard — Welcome, {{ fullName }}!</h3>
+        <a href="/Registration/Login" class="logout-btn" ng-click="logout()">Logout</a>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h2>{{ stats.total }}</h2>
+            <p>Total Books</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ stats.borrowed }}</h2>
+            <p>Borrowed Books</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ stats.available }}</h2>
+            <p>Available Books</p>
+        </div>
+    </div>
+
+    <div class="container-box">
+        <div class="main-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="book in books">
+                        <td>{{ book.Title }}</td>
+                        <td>{{ book.Author }}</td>
+                        <td>
+                            <span class="status" ng-class="book.Status === 'Available' ? 'available' : 'borrowed'">
+                                {{ book.Status }}
+                            </span>
+                        </td>
+                        <td>
+                            <!-- Show Borrow if Available -->
+                            <button class="btn-borrow"
+                                    ng-if="book.Status === 'Available'"
+                                    ng-click="borrowBook(book.BookID)">
+                                Borrow
+                            </button>
+                            <!-- Show Return if Borrowed by current user -->
+                            <button class="btn-return"
+                                    ng-if="book.Status === 'Borrowed' && book.BorrowedByMe"
+                                    ng-click="returnBook(book.BookID)">
+                                Return
+                            </button>
+                            <!-- Show disabled if Borrowed by someone else -->
+                            <button class="btn-borrow"
+                                    ng-if="book.Status === 'Borrowed' && !book.BorrowedByMe"
+                                    disabled>
+                                Borrowed
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        app.controller("DashboardController", function ($scope, OnlineLibraryMSService) {
+
+            var currentUserID = parseInt(localStorage.getItem("UserID"));
+            $scope.fullName = localStorage.getItem("FullName") || "User";
+
+            $scope.logout = function () {
+                localStorage.clear();
+            };
+
+            function loadStats() {
+                OnlineLibraryMSService.getStats().then(function (res) {
+                    $scope.stats = res.data;
+                });
+            }
+
+            function loadBooks() {
+                OnlineLibraryMSService.getBooks().then(function (res) {
+                    $scope.books = res.data;
+                    // Mark which books are borrowed by current user
+                    OnlineLibraryMSService.getMyBorrows(currentUserID).then(function (res2) {
+                        var myBookIDs = res2.data.map(function (b) { return b.BookID; });
+                        $scope.books.forEach(function (book) {
+                            book.BorrowedByMe = myBookIDs.indexOf(book.BookID) !== -1;
+                        });
+                    });
+                });
+            }
+
+            $scope.borrowBook = function (bookID) {
+                var borrowData = { BookID: bookID, UserID: currentUserID };
+                OnlineLibraryMSService.borrowBook(borrowData).then(function (res) {
+                    if (res.data.success) {
+                        alert(res.data.message);
+                        loadBooks();
+                        loadStats();
+                    } else {
+                        alert(res.data.message);
+                    }
+                });
+            };
+
+            $scope.returnBook = function (bookID) {
+                if (confirm("Are you sure you want to return this book?")) {
+                    OnlineLibraryMSService.returnBook({ BookID: bookID, UserID: currentUserID })
+                        .then(function (res) {
+                            if (res.data.success) {
+                                alert(res.data.message);
+                                loadBooks();
+                                loadStats();
+                            } else {
+                                alert(res.data.message);
+                            }
+                        });
+                }
+            };
+
+            loadBooks();
+            loadStats();
+        });
+    </script>
+}

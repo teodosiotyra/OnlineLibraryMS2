@@ -1,0 +1,222 @@
+﻿        @{
+            Layout = "~/Views/Shared/_RegLayoutPage.cshtml";
+        }
+
+        <style>
+            @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg,#0d47a1,#1976d2,#42a5f5);
+                min-height: 100vh;
+            }
+
+            .wrapper {
+                width: 100%;
+                max-width: 1200px;
+                margin: 30px auto;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            }
+
+            .row-box {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .left-panel,
+            .right-panel {
+                width: 50%;
+                min-height: 720px;
+                box-sizing: border-box;
+            }
+
+            .left-panel {
+                background: rgba(255,255,255,0.10);
+                backdrop-filter: blur(10px);
+                color: white;
+                padding: 40px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .right-panel {
+                background: white;
+                padding: 40px;
+            }
+
+            .icon-top {
+                font-size: 70px;
+                margin-bottom: 10px;
+            }
+
+            .left-panel h3 {
+                font-size: 24px;
+                font-weight: 600;
+                margin: 10px 0;
+            }
+
+            .left-panel p {
+                font-size: 14px;
+                color: rgba(255,255,255,0.85);
+                margin-bottom: 25px;
+                line-height: 1.5;
+            }
+
+            .feature-box {
+                background: rgba(255,255,255,0.12);
+                padding: 15px;
+                border-radius: 12px;
+                margin-bottom: 12px;
+            }
+
+                .feature-box i {
+                    font-size: 28px;
+                }
+
+                .feature-box span {
+                    display: block;
+                    font-size: 14px;
+                    margin-top: 5px;
+                    font-weight: 500;
+                }
+
+            .right-panel h4 {
+                text-align: center;
+                color: #1565c0;
+                font-size: 22px;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            .right-panel p {
+                text-align: center;
+                color: gray;
+                font-size: 13px;
+                margin-bottom: 25px;
+            }
+
+            .input-field input {
+                font-size: 14px;
+            }
+
+            .btn-custom {
+                width: 100%;
+                height: 45px;
+                border-radius: 25px;
+                font-weight: 600;
+                margin-bottom: 10px;
+                text-transform: none;
+            }
+
+            .btn-register {
+                background: #1565c0;
+                color: white;
+            }
+
+            .btn-clear {
+                background: #e0e0e0;
+                color: black;
+            }
+
+            .login-link {
+                text-align: center;
+                margin-top: 15px;
+                font-size: 13px;
+            }
+
+                .login-link a {
+                    color: #1565c0;
+                    font-weight: 600;
+                }
+
+            @@media(max-width: 900px) {
+                .left-panel,
+                .right-panel {
+                    width: 100%;
+                }
+            }
+        </style>
+
+        <div class="wrapper">
+
+            <div class="row-box">
+
+                <div class="left-panel">
+
+                    <i class="material-icons icon-top">local_library</i>
+
+                    <h3>Online Library System</h3>
+
+                    <p>
+                        Manage books, borrow easily, and track your reading records in one system.
+                    </p>
+
+                    <div class="feature-box">
+                        <i class="material-icons">search</i>
+                        <span>Search Books</span>
+                    </div>
+
+                    <div class="feature-box">
+                        <i class="material-icons">menu_book</i>
+                        <span>Browse Collection</span>
+                    </div>
+
+                    <div class="feature-box">
+                        <i class="material-icons">assignment_return</i>
+                        <span>Borrow & Return</span>
+                    </div>
+
+                    <div class="feature-box">
+                        <i class="material-icons">history</i>
+                        <span>Track History</span>
+                    </div>
+
+                </div>
+
+                <div class="right-panel">
+
+                    <h4>Create Account</h4>
+                    <p>Fill up the form to register</p>
+
+                    <div class="input-field">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input type="text" ng-model="regUsername">
+                        <label class="active">Username</label>
+                    </div>
+
+                    <div class="input-field">
+                        <i class="material-icons prefix">lock</i>
+                        <input type="password" ng-model="regPassword">
+                        <label class="active">Password</label>
+                    </div>
+
+                    <div class="input-field">
+                        <i class="material-icons prefix">person</i>
+                        <input type="text" ng-model="regName">
+                        <label class="active">Full Name</label>
+                    </div>
+
+                    <button class="btn btn-custom btn-register" ng-click="regUser2()">
+                        Register
+                    </button>
+
+                    <button class="btn btn-custom btn-clear" ng-click="clearFields()">
+                        Clear
+                    </button>
+
+                    <div class="login-link">
+                        Already have an account?
+                        <a href="/Registration/Login">Login here</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>

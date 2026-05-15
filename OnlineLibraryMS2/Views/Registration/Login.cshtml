@@ -1,0 +1,211 @@
+﻿@{
+    Layout = "~/Views/Shared/_RegLayoutPage.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* MAIN SPLIT */
+    .split-container {
+        display: flex;
+        height: 100vh;
+    }
+
+    /* LEFT SIDE */
+    .left-side {
+        flex: 1;
+        background: linear-gradient(135deg,#0d47a1,#1976d2,#42a5f5);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 50px;
+    }
+
+        .left-side i {
+            font-size: 85px;
+            margin-bottom: 10px;
+        }
+
+        .left-side h1 {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .left-side p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+    /* RIGHT SIDE */
+    .right-side {
+        flex: 1;
+        background: #f5f7fb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* LOGIN CARD */
+    .card-box {
+        width: 380px;
+        padding: 40px;
+        border-radius: 18px;
+        background: #ffffff;
+        border: 2px solid rgba(21,101,192,0.15);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.20), inset 0 0 0 1px rgba(255,255,255,0.6);
+        box-sizing: border-box;
+    }
+
+        .card-box h4 {
+            text-align: center;
+            color: #1565c0;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-box p {
+            text-align: center;
+            color: gray;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+    /* INPUT */
+    .input-field input {
+        font-size: 14px;
+    }
+
+    /* BUTTONS */
+    .btn-custom {
+        width: 100%;
+        height: 45px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: none;
+        margin-bottom: 10px;
+    }
+
+    .btn-login {
+        background: #1565c0;
+        color: white;
+    }
+
+    .btn-clear {
+        background: #e0e0e0;
+        color: black;
+    }
+
+    /* LINK */
+    .register-link {
+        text-align: center;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+        .register-link a {
+            color: #1565c0;
+            font-weight: 600;
+        }
+
+    /* MOBILE */
+    @@media(max-width:900px) {
+        .split-container {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="split-container" ng-app="libraryApp" ng-controller="OnlineLibraryMSController">
+
+    <div class="left-side">
+        <i class="material-icons">local_library</i>
+        <h1>Online Library System</h1>
+        <p>Manage books, borrow easily, and track your reading records in one modern system.</p>
+    </div>
+
+    <div class="right-side">
+        <div class="card-box">
+            <h4>Login</h4>
+            <p>Enter your account</p>
+
+            <div class="input-field">
+                <i class="material-icons prefix">account_circle</i>
+                <input type="text" ng-model="loginUsername" />
+                <label class="active">Username</label>
+            </div>
+
+            <div class="input-field">
+                <i class="material-icons prefix">lock</i>
+                <input type="password" ng-model="loginPassword" />
+                <label class="active">Password</label>
+            </div>
+
+            <button class="btn btn-custom btn-login" ng-click="checkLogin()">
+                Login
+            </button>
+
+            <button class="btn btn-custom btn-clear" ng-click="clearLogin()">
+                Clear
+            </button>
+
+            <div class="register-link">
+                Don't have an account?
+                <a href="/Registration/RegistrationPage">Register here</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script>
+    var app = angular.module('libraryApp', []);
+
+    app.service('OnlineLibraryMSService', function ($http) {
+        this.login = function (loginData) {
+            return $http.post('/Registration/LoginUser', loginData);
+        };
+    });
+
+    app.controller('OnlineLibraryMSController', function ($scope, OnlineLibraryMSService) {
+        $scope.checkLogin = function () {
+            var loginData = {
+                Username: $scope.loginUsername,
+                Password: $scope.loginPassword
+            };
+
+            // Check if the credentials match the admin criteria
+            if (loginData.Username === "Admin" && loginData.Password === "") {
+                window.location.href = "/Registration/AdminDashboard";
+                return; // Stop further execution
+            }
+
+            OnlineLibraryMSService.login(loginData)
+                .then(function (response) {
+                    if (response.data.status === "Success") {
+                        window.location.href = "/Registration/Dashboard";
+                    } else {
+                        alert(response.data.message || "Invalid Username or Password");
+                    }
+                }, function () {
+                    alert("An error occurred during the login process.");
+                });
+        };
+
+        $scope.clearLogin = function () {
+            $scope.loginUsername = "";
+            $scope.loginPassword = "";
+        };
+    });
+</script>

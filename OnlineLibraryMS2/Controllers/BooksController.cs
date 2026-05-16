@@ -8,7 +8,6 @@ namespace OnlineLibraryMS2.Controllers
 {
     public class BooksController : Controller
     {
-        // GET all books (for Dashboard & AdminDashboard)
         public JsonResult GetBooks()
         {
             using (var db = new LibraryContext())
@@ -24,7 +23,6 @@ namespace OnlineLibraryMS2.Controllers
             }
         }
 
-        // GET stats
         public JsonResult GetStats()
         {
             using (var db = new LibraryContext())
@@ -36,7 +34,6 @@ namespace OnlineLibraryMS2.Controllers
             }
         }
 
-        // POST add book
         [HttpPost]
         public JsonResult AddBook(tbl_books_models book)
         {
@@ -57,7 +54,6 @@ namespace OnlineLibraryMS2.Controllers
             }
         }
 
-        // POST edit book
         [HttpPost]
         public JsonResult EditBook(tbl_books_models book)
         {
@@ -93,7 +89,6 @@ namespace OnlineLibraryMS2.Controllers
                     if (existing == null)
                         return Json(new { success = false, message = "Book not found" });
 
-                    // Only update fields that are not null/empty
                     if (!string.IsNullOrEmpty(book.Title))
                         existing.Title = book.Title;
 
@@ -115,7 +110,6 @@ namespace OnlineLibraryMS2.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        // POST delete book
         [HttpPost]
         public JsonResult DeleteBook(int id)
         {

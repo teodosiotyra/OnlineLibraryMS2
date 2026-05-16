@@ -23,7 +23,6 @@
         };
         OnlineLibraryMSService.login(loginData).then(function (response) {
             if (response.data.status == "Success") {
-                // Save UserID and Role to localStorage
                 localStorage.setItem("UserID", response.data.UserID);
                 localStorage.setItem("Role", response.data.role);
                 localStorage.setItem("FullName", response.data.fullName);

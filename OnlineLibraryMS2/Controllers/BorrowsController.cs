@@ -46,15 +46,12 @@ namespace OnlineLibraryMS2.Controllers
             {
                 using (var db = new LibraryContext())
                 {
-                    // Find the book first
                     var book = db.tbl_books.Find(BookID);
                     if (book == null)
                         return Json(new { success = false, message = "Book not found" });
 
-                    // If Admin (UserID = 0), force return without checking borrow record
                     if (UserID == 0)
                     {
-                        // Update any active borrow record
                         var activeBorrow = db.tbl_borrows.FirstOrDefault(b =>
                             b.BookID == BookID && b.Status == "Borrowed");
 
@@ -64,14 +61,12 @@ namespace OnlineLibraryMS2.Controllers
                             activeBorrow.Status = "Returned";
                         }
 
-                        // Update book status back to Available
                         book.Status = "Available";
                         db.SaveChanges();
 
                         return Json(new { success = true, message = "Book returned successfully!" });
                     }
 
-                    // Regular user return — check if they borrowed it
                     var borrow = db.tbl_borrows.FirstOrDefault(b =>
                         b.BookID == BookID &&
                         b.UserID == UserID &&

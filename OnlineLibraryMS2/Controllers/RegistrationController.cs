@@ -46,7 +46,6 @@ namespace OnlineLibraryMS2.Controllers
             {
                 using (var db = new LibraryContext())
                 {
-                    // Check if the username already    exists in the database
                     if (db.tbl_users.Any(x => x.Username == user.Username))
                     {
                         return Json(new
@@ -56,7 +55,6 @@ namespace OnlineLibraryMS2.Controllers
                         });
                     }
 
-                    // Assign standard properties
                     user.Role = "User";
                     user.DateRegistered = DateTime.Now;
 
@@ -84,7 +82,6 @@ namespace OnlineLibraryMS2.Controllers
         [HttpPost]
         public JsonResult RegUser2(tbl_users_model user)
         {
-            // Reusing the logic from RegisterUser
             return RegisterUser(user);
         }
 
@@ -95,7 +92,6 @@ namespace OnlineLibraryMS2.Controllers
             {
                 using (var db = new LibraryContext())
                 {
-                    // Check if it is the static Admin login
                     if (login.Username == "admin" && login.Password == "admin123")
                     {
                         return Json(new
@@ -104,8 +100,6 @@ namespace OnlineLibraryMS2.Controllers
                             role = "Admin"
                         });
                     }
-
-                    // Query the database for the user
                     var user = db.tbl_users.FirstOrDefault(x =>
                         x.Username == login.Username &&
                         x.Password == login.Password);

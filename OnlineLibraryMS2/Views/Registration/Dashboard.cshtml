@@ -185,19 +185,16 @@
                             </span>
                         </td>
                         <td>
-                            <!-- Show Borrow if Available -->
                             <button class="btn-borrow"
                                     ng-if="book.Status === 'Available'"
                                     ng-click="borrowBook(book.BookID)">
                                 Borrow
                             </button>
-                            <!-- Show Return if Borrowed by current user -->
                             <button class="btn-return"
                                     ng-if="book.Status === 'Borrowed' && book.BorrowedByMe"
                                     ng-click="returnBook(book.BookID)">
                                 Return
                             </button>
-                            <!-- Show disabled if Borrowed by someone else -->
                             <button class="btn-borrow"
                                     ng-if="book.Status === 'Borrowed' && !book.BorrowedByMe"
                                     disabled>
@@ -232,7 +229,6 @@
             function loadBooks() {
                 OnlineLibraryMSService.getBooks().then(function (res) {
                     $scope.books = res.data;
-                    // Mark which books are borrowed by current user
                     OnlineLibraryMSService.getMyBorrows(currentUserID).then(function (res2) {
                         var myBookIDs = res2.data.map(function (b) { return b.BookID; });
                         $scope.books.forEach(function (book) {

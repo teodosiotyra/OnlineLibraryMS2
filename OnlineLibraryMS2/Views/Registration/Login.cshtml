@@ -11,13 +11,11 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    /* MAIN SPLIT */
     .split-container {
         display: flex;
         height: 100vh;
     }
 
-    /* LEFT SIDE */
     .left-side {
         flex: 1;
         background: linear-gradient(135deg,#0d47a1,#1976d2,#42a5f5);
@@ -48,7 +46,6 @@
             line-height: 1.6;
         }
 
-    /* RIGHT SIDE */
     .right-side {
         flex: 1;
         background: #f5f7fb;
@@ -57,7 +54,6 @@
         align-items: center;
     }
 
-    /* LOGIN CARD */
     .card-box {
         width: 380px;
         padding: 40px;
@@ -82,12 +78,10 @@
             margin-bottom: 20px;
         }
 
-    /* INPUT */
     .input-field input {
         font-size: 14px;
     }
 
-    /* BUTTONS */
     .btn-custom {
         width: 100%;
         height: 45px;
@@ -107,7 +101,6 @@
         color: black;
     }
 
-    /* LINK */
     .register-link {
         text-align: center;
         font-size: 13px;
@@ -119,7 +112,6 @@
             font-weight: 600;
         }
 
-    /* MOBILE */
     @@media(max-width:900px) {
         .split-container {
             flex-direction: column;
@@ -185,10 +177,9 @@
                 Password: $scope.loginPassword
             };
 
-            // Check if the credentials match the admin criteria
             if (loginData.Username === "Admin" && loginData.Password === "") {
                 window.location.href = "/Registration/AdminDashboard";
-                return; // Stop further execution
+                return; 
             }
 
             OnlineLibraryMSService.login(loginData)

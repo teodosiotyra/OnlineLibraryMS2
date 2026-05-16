@@ -9,7 +9,6 @@ namespace OnlineLibraryMS2.Controllers
 {
     public class BorrowsController : Controller
     {
-        [HttpPost]
         public JsonResult BorrowBook(tbl_borrows_models borrow)
         {
             try
@@ -39,7 +38,6 @@ namespace OnlineLibraryMS2.Controllers
             }
         }
 
-        [HttpPost]
         public JsonResult ReturnBook(int BookID, int UserID)
         {
             try

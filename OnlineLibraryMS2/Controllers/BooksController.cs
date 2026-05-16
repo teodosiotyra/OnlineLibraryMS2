@@ -34,7 +34,6 @@ namespace OnlineLibraryMS2.Controllers
             }
         }
 
-        [HttpPost]
         public JsonResult AddBook(tbl_books_models book)
         {
             try
@@ -54,7 +53,6 @@ namespace OnlineLibraryMS2.Controllers
             }
         }
 
-        [HttpPost]
         public JsonResult EditBook(tbl_books_models book)
         {
             try
@@ -78,7 +76,6 @@ namespace OnlineLibraryMS2.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        [HttpPost]
         public JsonResult Edit(tbl_books_models book)
         {
             try
@@ -110,7 +107,6 @@ namespace OnlineLibraryMS2.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        [HttpPost]
         public JsonResult DeleteBook(int id)
         {
             try

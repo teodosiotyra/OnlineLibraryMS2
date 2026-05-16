@@ -79,13 +79,11 @@ namespace OnlineLibraryMS2.Controllers
             }
         }
 
-        [HttpPost]
         public JsonResult RegUser2(tbl_users_model user)
         {
             return RegisterUser(user);
         }
 
-        [HttpPost]
         public JsonResult LoginUser(tbl_users_model login)
         {
             try
